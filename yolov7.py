@@ -1,3 +1,4 @@
+from colorsys import hsv_to_rgb
 from dataclasses import dataclass
 from typing import NamedTuple, Sequence
 
@@ -10,6 +11,23 @@ from utils.datasets import letterbox
 from utils.general import check_img_size, non_max_suppression, scale_coords, set_logging
 from utils.plots import plot_one_box
 from utils.torch_utils import TracedModel, select_device
+
+
+def generate_pretty_colours(n_colors, initial_hue=None, saturation=0.5, value=0.95):
+    """uses golden ratio to create pleasant/pretty colours
+    returns in rgb form"""
+    golden_ratio_conjugate = 0.618033988749895
+    if initial_hue is None:
+        hue = random.random()
+    else:
+        hue = initial_hue
+    colors = []
+    for _ in range(n_colors):
+        hue += golden_ratio_conjugate
+        hue %= 1
+        color = tuple([round(x * 256) for x in hsv_to_rgb(hue, saturation, value)])
+        colors.append(color)
+    return colors
 
 
 class BoundingBox(NamedTuple):
@@ -123,7 +141,12 @@ class YOLOv7:
             if hasattr(self.model, "module")
             else self.model.names
         )
-        colors = [[random.randint(0, 255) for _ in range(3)] for _ in label_names]
+        colors = generate_pretty_colours(
+            len(label_names),
+            initial_hue=0.1,
+            saturation=0.75,
+            value=0.9,
+        )
         labels = []
         for i, (name, color) in enumerate(zip(label_names, colors)):
             labels.append(Label(i, name, Color(*color)))
