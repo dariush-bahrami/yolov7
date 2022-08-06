@@ -2,9 +2,9 @@
 
 *Note 1: This is a fork of YOLOv7 official [repo](https://github.com/WongKinYiu/yolov7)*
 
-*Note 2: Check usage.ipynb*
+*Note 2: Check [usage.ipynb](https://github.com/dariush-bahrami/yolov7/blob/main/usage.ipynb)*
 
-*Note 3: Check yolov7.py*
+*Note 3: Check [yolov7.py](https://github.com/dariush-bahrami/yolov7/blob/main/yolov7.py)*
 
 <hr /> 
 
