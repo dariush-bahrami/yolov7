@@ -70,6 +70,9 @@ class YOLOv7Prediction:
             [i.label.name for i in self.detected_objects],
         )
 
+    def __repr__(self):
+        return self.__str__()
+
 
 @dataclass
 class InferenceArgs:
@@ -176,3 +179,9 @@ class YOLOv7:
         prediction = prediction[0]
         processed_prediction = self.post_process(image, transformed_image, prediction)
         return processed_prediction
+
+    def __str__(self):
+        return "YOLOv7 Inference Model"
+
+    def __repr__(self):
+        return self.__str__()
