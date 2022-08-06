@@ -1,7 +1,12 @@
 # YOLOv7 Inference
 
-*Note: This is a fork of YOLOv7 official [repo](https://github.com/WongKinYiu/yolov7)*
+*Note 1: This is a fork of YOLOv7 official [repo](https://github.com/WongKinYiu/yolov7)*
 
+*Note 2: Check usage.ipynb*
+
+*Note 3: Check yolov7.py*
+
+<hr /> 
 
 Import required modules:
 
@@ -41,3 +46,4 @@ To visualize results use `.visualize()` method on prediction object:
 ```python
 prediction.visualize()
 ```
+
