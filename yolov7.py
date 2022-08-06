@@ -1,6 +1,6 @@
 from colorsys import hsv_to_rgb
 from dataclasses import dataclass
-from typing import NamedTuple, Sequence
+from typing import List, NamedTuple, Optional, Sequence, Tuple
 
 import numpy as np
 import torch
@@ -13,9 +13,23 @@ from utils.plots import plot_one_box
 from utils.torch_utils import TracedModel, select_device
 
 
-def generate_pretty_colours(n_colors, initial_hue=None, saturation=0.5, value=0.95):
-    """uses golden ratio to create pleasant/pretty colours
-    returns in rgb form"""
+def generate_pretty_colours(
+    n_colors: int,
+    initial_hue: Optional[float] = None,
+    saturation: float = 0.5,
+    value: float = 0.95,
+) -> List[Tuple]:
+    """Generate a list of n_colors colours, with a hue ranging from 0 to 1.
+
+    Args:
+        n_colors (int): _description_
+        initial_hue (Optional[float], optional): Initial hue. Defaults to None.
+        saturation (float, optional): Colors saturation. Defaults to 0.5.
+        value (float, optional): Colors value. Defaults to 0.95.
+
+    Returns:
+        List[Tuple]: Pretty colours.
+    """
     golden_ratio_conjugate = 0.618033988749895
     if initial_hue is None:
         hue = random.random()
@@ -61,7 +75,7 @@ class YOLOv7Prediction:
         self.detected_objects = detected_objects
         self.__visualized = False
 
-    def visualize(self):
+    def visualize(self) -> np.ndarray:
         if not self.__visualized:
             self.__plot_boxes()
             self.__visualized = True
@@ -69,7 +83,7 @@ class YOLOv7Prediction:
         else:
             return self.__image
 
-    def __plot_boxes(self):
+    def __plot_boxes(self) -> None:
         for detected_object in self.detected_objects:
             box_label = "{} {:.2f}".format(
                 detected_object.label.name, detected_object.confidence
@@ -82,13 +96,13 @@ class YOLOv7Prediction:
                 line_thickness=3,
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "YOLOv7 Detection Result with {} detected objects: {}".format(
             len(self.detected_objects),
             [i.label.name for i in self.detected_objects],
         )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 
@@ -104,10 +118,8 @@ class InferenceArgs:
 
 
 class YOLOv7:
-    def __init__(self, inference_args: InferenceArgs):
+    def __init__(self, inference_args: InferenceArgs) -> None:
         self.inference_args = inference_args
-
-        #################
 
         # Initialize
         set_logging()
@@ -188,7 +200,7 @@ class YOLOv7:
         return YOLOv7Prediction(original_image, detected_objects)
 
     @torch.no_grad()
-    def __call__(self, image: np.ndarray):
+    def __call__(self, image: np.ndarray) -> YOLOv7Prediction:
         transformed_image = self.transform(image)
         prediction = self.model(transformed_image, augment=False)[0]
         prediction = non_max_suppression(
@@ -203,8 +215,8 @@ class YOLOv7:
         processed_prediction = self.post_process(image, transformed_image, prediction)
         return processed_prediction
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "YOLOv7 Inference Model"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
