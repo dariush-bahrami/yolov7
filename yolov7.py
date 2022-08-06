@@ -201,6 +201,14 @@ class YOLOv7:
 
     @torch.no_grad()
     def __call__(self, image: np.ndarray) -> YOLOv7Prediction:
+        """Get YOLOv7 predictions for an image.
+
+        Args:
+            image (np.ndarray): Image to predict on in RGB format.
+
+        Returns:
+            YOLOv7Prediction: YOLOv7 predictions for the image.
+        """
         transformed_image = self.transform(image)
         prediction = self.model(transformed_image, augment=False)[0]
         prediction = non_max_suppression(
